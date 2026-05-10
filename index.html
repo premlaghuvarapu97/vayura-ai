@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vayura AI — Swift as the Wind. Land Your Dream Job.</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+        }
+
+        /* NAVBAR */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6b00, #ff9500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #ff6b00, #ff9500);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 100px 20px 60px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 107, 0, 0.15);
+            border: 1px solid rgba(255, 107, 0, 0.3);
+            color: #ff9500;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #ff6b00, #ff9500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #888;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        /* WAITLIST FORM */
+        .waitlist-form {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .waitlist-form input {
+            padding: 16px 24px;
+            border-radius: 50px;
+            border: 1px solid #333;
+            background: #111;
+            color: white;
+            font-size: 16px;
+            width: 320px;
+            outline: none;
+        }
+
+        .waitlist-form input:focus {
+            border-color: #ff6b00;
+        }
+
+        .waitlist-form button {
+            padding: 16px 36px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(135deg, #ff6b00, #ff9500);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .hero-sub {
+            color: #555;
+            font-size: 14px;
+        }
+
+        /* STATS */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            padding: 60px 20px;
+            border-top: 1px solid #1a1a1a;
+            border-bottom: 1px solid #1a1a1a;
+            flex-wrap: wrap;
+        }
+
+        .stat h3 {
+            font-size: 42px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff6b00, #ff9500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat p {
+            color: #666;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* FEATURES */
+        .features {
+            padding: 80px 60px;
+            text-align: center;
+        }
+
+        .features h2 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .features h2 span {
+            background: linear-gradient(135deg, #ff6b00, #ff9500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .features-subtitle {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: #111;
+            border: 1px solid #1f1f1f;
+            border-radius: 20px;
+            padding: 36px 28px;
+            text-align: left;
+            transition: border-color 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: #ff6b00;
+        }
+
+        .feature-icon {
+            font-size: 36px;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* PRICING */
+        .pricing {
+            padding: 80px 60px;
+            text-align: center;
+            background: #080808;
+        }
+
+        .pricing h2 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .pricing h2 span {
+            background: linear-gradient(135deg, #ff6b00, #ff9500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .pricing-subtitle {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 60px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: #111;
+            border: 1px solid #1f1f1f;
+            border-radius: 20px;
+            padding: 40px 28px;
+            text-align: left;
+        }
+
+        .pricing-card.popular {
+            border-color: #ff6b00;
+            position: relative;
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff6b00, #ff9500);
+            color: white;
+            padding: 4px 20px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .pricing-card h3 {
+            font-size: 18px;
+            color: #888;
+            margin-bottom: 16px;
+        }
+
+        .pricing-card .price {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 4px;
+        }
+
+        .pricing-card .price span {
+            font-size: 16px;
+            color: #666;
+            font-weight: 400;
+        }
+
+        .pricing-card .desc {
+            color: #555;
+            font-size: 13px;
+            margin-bottom: 28px;
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .pricing-card ul li {
+            color: #888;
+            font-size: 14px;
+            padding: 8px 0;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .pricing-card ul li::before {
+            content: "✓ ";
+            color: #ff6b00;
+            font-weight: 700;
+        }
+
+        .pricing-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 50px;
+            border: 1px solid #ff6b00;
+            background: transparent;
+            color: #ff6b00;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pricing-btn.primary {
+            background: linear-gradient(135deg, #ff6b00, #ff9500);
+            color: white;
+            border: none;
+        }
+
+        /* CTA */
+        .cta {
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .cta h2 span {
+            background: linear-gradient(135deg, #ff6b00, #ff9500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cta p {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .cta-btn {
+            padding: 18px 48px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(135deg, #ff6b00, #ff9500);
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 40px 60px;
+            border-top: 1px solid #1a1a1a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #444;
+            font-size: 14px;
+        }
+
+        .footer-logo {
+            font-size: 20px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6b00, #ff9500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* SUCCESS MESSAGE */
+        .success-msg {
+            display: none;
+            color: #ff9500;
+            font-size: 15px;
+            margin-top: 16px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 36px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            nav { padding: 20px; }
+            .features { padding: 60px 20px; }
+            .pricing { padding: 60px 20px; }
+            footer { flex-direction: column; gap: 16px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="logo">⚡ Vayura AI</div>
+        <button class="nav-btn" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Join Waitlist</button>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="waitlist">
+        <div class="hero-badge">🚀 Launching Soon — Join the Waitlist</div>
+        <h1>Land Your Dream Job<br><span>Swift as the Wind</span></h1>
+        <p>Vayura AI auto-applies to thousands of jobs and gives you real-time AI answers during live interviews. Your unfair advantage in the job market.</p>
+
+        <div class="waitlist-form">
+            <input type="email" id="emailInput" placeholder="Enter your email address" />
+            <button onclick="joinWaitlist()">Join Free Waitlist 🚀</button>
+        </div>
+        <p class="hero-sub">🔒 No spam. No credit card. Just early access.</p>
+        <p class="success-msg" id="successMsg">🎉 You're on the waitlist! We'll notify you at launch!</p>
+    </section>
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="stat">
+            <h3>10K+</h3>
+            <p>Jobs Applied Automatically</p>
+        </div>
+        <div class="stat">
+            <h3>95%</h3>
+            <p>Interview Success Rate</p>
+        </div>
+        <div class="stat">
+            <h3>52</h3>
+            <p>Languages Supported</p>
+        </div>
+        <div class="stat">
+            <h3>$0</h3>
+            <p>To Get Started</p>
+        </div>
+    </div>
+
+    <!-- FEATURES -->
+    <section class="features">
+        <h2>Everything You Need to<br><span>Get Hired Faster</span></h2>
+        <p class="features-subtitle">From application to offer letter — Vayura AI covers every step</p>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Auto Job Apply</h3>
+                <p>Apply to thousands of matching jobs on LinkedIn, Indeed, and more with one click. Save 20+ hours every week.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Real-Time Interview AI</h3>
+                <p>Get instant AI-powered answers during live interviews. Invisible to screen share. Works on Zoom, Meet, Teams.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📄</div>
+                <h3>AI Resume Builder</h3>
+                <p>Automatically tailor your resume for each job. Beat ATS systems and get noticed by real humans.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✍️</div>
+                <h3>Cover Letter Generator</h3>
+                <p>Generate personalized cover letters for every job in seconds. No more writer's block.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎤</div>
+                <h3>Mock Interview Practice</h3>
+                <p>Practice with AI before the real interview. Get feedback and improve your answers.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Application Dashboard</h3>
+                <p>Track every application in one place. Know exactly where you stand at every company.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="pricing">
+        <h2>Simple, <span>Transparent Pricing</span></h2>
+        <p class="pricing-subtitle">Start free. Upgrade when you're ready.</p>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Starter</h3>
+                <div class="price">$19<span>/mo</span></div>
+                <p class="desc">Perfect for casual job seekers</p>
+                <ul>
+                    <li>5 Interview Sessions/month</li>
+                    <li>50 Auto Applications/day</li>
+                    <li>AI Resume Builder</li>
+                    <li>Cover Letter Generator</li>
+                    <li>Email Support</li>
+                </ul>
+                <button class="pricing-btn">Get Started</button>
+            </div>
+
+            <div class="pricing-card popular">
+                <div class="popular-badge">⭐ MOST POPULAR</div>
+                <h3>Pro</h3>
+                <div class="price">$39<span>/mo</span></div>
+                <p class="desc">For serious job hunters</p>
+                <ul>
+                    <li>Unlimited Interview Sessions</li>
+                    <li>Unlimited Auto Applications</li>
+                    <li>Real-Time Interview AI</li>
+                    <li>Mock Interview Practice</li>
+                    <li>Priority AI Model</li>
+                    <li>Application Dashboard</li>
+                </ul>
+                <button class="pricing-btn primary">Get Started</button>
+            </div>
+
+            <div class="pricing-card">
+                <h3>Lifetime</h3>
+                <div class="price">$199<span> once</span></div>
+                <p class="desc">Pay once, use forever</p>
+                <ul>
+                    <li>Everything in Pro</li>
+                    <li>All Future Features</li>
+                    <li>Early Access to New Tools</li>
+                    <li>Founding Member Badge</li>
+                    <li>Priority Support Forever</li>
+                </ul>
+                <button class="pricing-btn">Get Lifetime Access</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <h2>Ready to Land Your<br><span>Dream Job?</span></h2>
+        <p>Join thousands of job seekers using Vayura AI to get hired faster</p>
+        <button class="cta-btn" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Join Free Waitlist 🚀</button>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">⚡ Vayura AI</div>
+        <div>© 2026 Vayura AI. All rights reserved.</div>
+        <div>swift as the wind 🙏</div>
+    </footer>
+
+    <script>
+        function joinWaitlist() {
+            const email = document.getElementById('emailInput').value;
+            if (!email || !email.includes('@')) {
+                alert('Please enter a valid email address!');
+                return;
+            }
+            document.getElementById('successMsg').style.display = 'block';
+            document.getElementById('emailInput').value = '';
+            console.log('Waitlist signup:', email);
+        }
+    </script>
+
+</body>
+</html>
