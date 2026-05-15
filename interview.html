@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview AI — Vayura AI</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0a0a0a; color: #ffffff; min-height: 100vh; padding: 40px 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+        .logo { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #ff6b00, #ff9500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer; }
+        .back-btn { color: #888; text-decoration: none; font-size: 14px; }
+        .title-section { text-align: center; margin-bottom: 40px; }
+        .title-section h1 { font-size: 36px; font-weight: 800; margin-bottom: 12px; }
+        .title-section h1 span { background: linear-gradient(135deg, #ff6b00, #ff9500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .title-section p { color: #666; font-size: 16px; }
+        .session-area { background: #111; border: 1px solid #1f1f1f; border-radius: 24px; padding: 40px; }
+        .status-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; padding: 16px 24px; background: #1a1a1a; border-radius: 16px; }
+        .status-dot { width: 12px; height: 12px; border-radius: 50%; background: #555; transition: background 0.3s; }
+        .status-dot.listening { background: #ff6b00; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .status-text { color: #888; font-size: 15px; flex: 1; }
+        .session-time { color: #ff9500; font-weight: 700; font-size: 16px; }
+        .controls { display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; }
+        .btn { padding: 14px 28px; border-radius: 12px; border: none; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, #ff6b00, #ff9500); color: white; }
+        .btn-danger { background: #dc2626; color: white; }
+        .btn-secondary { background: #1a1a1a; color: white; border: 1px solid #333; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .qa-section { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        @media (max-width: 768px) { .qa-section { grid-template-columns: 1fr; } }
+        .qa-box { background: #1a1a1a; border-radius: 16px; padding: 24px; min-height: 300px; }
+        .qa-box h3 { font-size: 14px; color: #888; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+        .qa-content { color: white; font-size: 15px; line-height: 1.7; }
+        .qa-content.empty { color: #444; font-style: italic; }
+        .answer-box { border: 1px solid rgba(255, 107, 0, 0.3); }
+        .answer-content { color: #ff9500; font-weight: 500; }
+        .loading { display: inline-block; color: #ff6b00; }
+        .loading::after { content: '...'; animation: dots 1.5s infinite; }
+        @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60%, 100% { content: '...'; } }
+        .instructions { background: rgba(255, 107, 0, 0.1); border: 1px solid rgba(255, 107, 0, 0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; color: #ff9500; font-size: 14px; }
+        .instructions strong { color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo" onclick="window.location.href='dashboard.html'">⚡ Vayura AI</div>
+            <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+        </div>
+
+        <div class="title-section">
+            <h1>🎯 <span>Interview AI</span></h1>
+            <p>Real-time AI answers during your live interview</p>
+        </div>
+
+        <div class="instructions">
+            <strong>How to use:</strong> Click "Start Session" → Speak the interview question → AI generates the perfect answer instantly!
+        </div>
+
+        <div class="session-area">
+            <div class="status-bar">
+                <div class="status-dot" id="statusDot"></div>
+                <div class="status-text" id="statusText">Ready to start your interview</div>
+                <div class="session-time" id="sessionTime">00:00</div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" id="startBtn">🎤 Start Session</button>
+                <button class="btn btn-danger" id="stopBtn" disabled>⏹️ Stop Session</button>
+                <button class="btn btn-secondary" id="clearBtn">🗑️ Clear</button>
+            </div>
+
+            <div class="qa-section">
+                <div class="qa-box">
+                    <h3>📝 Question Heard</h3>
+                    <div class="qa-content empty" id="questionBox">
+                        Speak the interview question and it will appear here...
+                    </div>
+                </div>
+
+                <div class="qa-box answer-box">
+                    <h3>✨ AI Answer</h3>
+                    <div class="qa-content answer-content empty" id="answerBox">
+                        Your AI-generated answer will appear here...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+        let sessionStartTime = null;
+        let timerInterval = null;
+
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const sessionTime = document.getElementById('sessionTime');
+        const questionBox = document.getElementById('questionBox');
+        const answerBox = document.getElementById('answerBox');
+
+        startBtn.addEventListener('click', startSession);
+        stopBtn.addEventListener('click', stopSession);
+        clearBtn.addEventListener('click', clearAll);
+
+        async function startSession() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) audioChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    await processAudio(audioBlob);
+                    audioChunks = [];
+
+                    if (isRecording) {
+                        mediaRecorder.start();
+                        setTimeout(() => {
+                            if (mediaRecorder.state === 'recording') mediaRecorder.stop();
+                        }, 5000);
+                    }
+                };
+
+                mediaRecorder.start();
+                setTimeout(() => {
+                    if (mediaRecorder.state === 'recording') mediaRecorder.stop();
+                }, 5000);
+
+                isRecording = true;
+                sessionStartTime = Date.now();
+                startTimer();
+
+                statusDot.classList.add('listening');
+                statusText.textContent = '🎤 Listening for questions...';
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+
+            } catch (error) {
+                alert('Microphone access denied: ' + error.message);
+            }
+        }
+
+        async function processAudio(audioBlob) {
+            try {
+                const reader = new FileReader();
+                reader.readAsDataURL(audioBlob);
+                reader.onloadend = async () => {
+                    const base64Audio = reader.result.split(',')[1];
+
+                    const response = await fetch('/api/transcribe', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ audio: base64Audio })
+                    });
+
+                    const data = await response.json();
+                    if (data.transcript && data.transcript.trim().length > 5) {
+                        questionBox.textContent = data.transcript;
+                        questionBox.classList.remove('empty');
+                        await getAIAnswer(data.transcript);
+                    }
+                };
+            } catch (error) {
+                console.error('Transcription error:', error);
+            }
+        }
+
+        async function getAIAnswer(question) {
+            answerBox.innerHTML = '<span class="loading">Thinking</span>';
+            answerBox.classList.remove('empty');
+
+            try {
+                const response = await fetch('/api/ai-answer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question: question })
+                });
+
+                const data = await response.json();
+                answerBox.textContent = data.answer || 'Could not generate answer';
+            } catch (error) {
+                answerBox.textContent = 'Error: ' + error.message;
+            }
+        }
+
+        function stopSession() {
+            isRecording = false;
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+            }
+            clearInterval(timerInterval);
+            statusDot.classList.remove('listening');
+            statusText.textContent = 'Session ended';
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+        }
+
+        function clearAll() {
+            questionBox.textContent = 'Speak the interview question and it will appear here...';
+            questionBox.classList.add('empty');
+            answerBox.textContent = 'Your AI-generated answer will appear here...';
+            answerBox.classList.add('empty');
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - sessionStartTime) / 1000);
+                const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                const seconds = (elapsed % 60).toString().padStart(2, '0');
+                sessionTime.textContent = `${minutes}:${seconds}`;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
