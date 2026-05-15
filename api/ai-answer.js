@@ -4,7 +4,11 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { question, context } = req.body;
+        const { question } = req.body;
+
+        if (!process.env.ANTHROPIC_API_KEY) {
+            return res.status(500).json({ error: 'API key not configured' });
+        }
 
         const response = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
@@ -14,7 +18,7 @@ export default async function handler(req, res) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'claude-3-5-sonnet-20241022',
+                model: 'claude-sonnet-4-5',
                 max_tokens: 1024,
                 messages: [{
                     role: 'user',
@@ -22,18 +26,23 @@ export default async function handler(req, res) {
 
 Question: "${question}"
 
-${context ? `Context about candidate: ${context}` : ''}
-
-Answer:`
+Answer naturally as if you were the candidate. Start directly with the answer.`
                 }]
             })
         });
 
         const data = await response.json();
-        const answer = data.content?.[0]?.text || 'Sorry, I could not generate an answer.';
+        console.log('Claude response:', JSON.stringify(data));
 
+        if (data.error) {
+            return res.status(500).json({ error: data.error.message });
+        }
+
+        const answer = data.content?.[0]?.text || 'No answer generated';
         return res.status(200).json({ answer });
+
     } catch (error) {
+        console.error('Error:', error);
         return res.status(500).json({ error: error.message });
     }
 }
