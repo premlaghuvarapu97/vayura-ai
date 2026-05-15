@@ -7,10 +7,8 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #0a0a0a; color: #ffffff; }
-
-        /* SIDEBAR */
-        .sidebar { position: fixed; left: 0; top: 0; width: 260px; height: 100vh; background: #111; border-right: 1px solid #1f1f1f; padding: 24px; display: flex; flex-direction: column; }
-        .sidebar-logo { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #ff6b00, #ff9500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 40px; }
+        .sidebar { position: fixed; left: 0; top: 0; width: 260px; height: 100vh; background: #111; border-right: 1px solid #1f1f1f; padding: 24px; display: flex; flex-direction: column; overflow-y: auto; }
+        .sidebar-logo { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #ff6b00, #ff9500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 40px; cursor: pointer; }
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; cursor: pointer; color: #666; font-size: 15px; margin-bottom: 4px; transition: all 0.2s; text-decoration: none; }
         .nav-item:hover { background: #1a1a1a; color: #fff; }
         .nav-item.active { background: rgba(255, 107, 0, 0.15); color: #ff9500; }
@@ -22,36 +20,30 @@
         .user-name { font-size: 14px; font-weight: 600; }
         .user-plan { font-size: 12px; color: #ff9500; }
         .logout-btn { background: none; border: none; color: #666; cursor: pointer; font-size: 18px; }
-
-        /* MAIN CONTENT */
         .main { margin-left: 260px; padding: 40px; }
         .page-header { margin-bottom: 32px; }
         .page-header h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
         .page-header p { color: #666; font-size: 15px; }
-
-        /* STATS CARDS */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
         .stat-card { background: #111; border: 1px solid #1f1f1f; border-radius: 16px; padding: 24px; }
         .stat-card .stat-icon { font-size: 28px; margin-bottom: 12px; }
         .stat-card .stat-value { font-size: 32px; font-weight: 900; background: linear-gradient(135deg, #ff6b00, #ff9500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .stat-card .stat-label { color: #666; font-size: 13px; margin-top: 4px; }
-
-        /* FEATURE CARDS */
         .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 32px; }
-        .feature-card { background: #111; border: 1px solid #1f1f1f; border-radius: 16px; padding: 28px; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
-        .feature-card:hover { border-color: #ff6b00; transform: translateY(-2px); }
+        .feature-card { background: #111; border: 1px solid #1f1f1f; border-radius: 16px; padding: 28px; cursor: pointer; transition: all 0.3s; position: relative; }
+        .feature-card.live { border-color: #ff6b00; }
+        .feature-card:hover { transform: translateY(-2px); border-color: #ff6b00; }
         .feature-card .feature-icon { font-size: 36px; margin-bottom: 16px; }
         .feature-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
-        .feature-card p { color: #666; font-size: 13px; line-height: 1.6; }
+        .feature-card p { color: #666; font-size: 13px; line-height: 1.6; margin-bottom: 16px; }
         .coming-soon { position: absolute; top: 16px; right: 16px; background: rgba(255, 107, 0, 0.15); color: #ff9500; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-        .feature-btn { margin-top: 16px; padding: 10px 20px; background: linear-gradient(135deg, #ff6b00, #ff9500); color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
-
-        /* UPGRADE BANNER */
+        .live-badge { position: absolute; top: 16px; right: 16px; background: rgba(0, 255, 0, 0.15); color: #6bff6b; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .feature-btn { padding: 10px 20px; background: linear-gradient(135deg, #ff6b00, #ff9500); color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; }
+        .feature-btn.disabled { background: #333; cursor: not-allowed; }
         .upgrade-banner { background: linear-gradient(135deg, #ff6b00, #ff9500); border-radius: 16px; padding: 28px 32px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
         .upgrade-banner h3 { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
         .upgrade-banner p { font-size: 14px; opacity: 0.9; }
         .upgrade-btn { background: white; color: #ff6b00; padding: 12px 28px; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; white-space: nowrap; }
-
         @media (max-width: 768px) {
             .sidebar { display: none; }
             .main { margin-left: 0; padding: 20px; }
@@ -62,27 +54,26 @@
 </head>
 <body>
 
-    <!-- SIDEBAR -->
     <div class="sidebar">
-        <div class="sidebar-logo">⚡ Vayura AI</div>
+        <div class="sidebar-logo" onclick="window.location.href='dashboard.html'">⚡ Vayura AI</div>
 
         <a class="nav-item active" href="dashboard.html">
             <span class="nav-icon">🏠</span> Dashboard
         </a>
-        <a class="nav-item" href="#">
-            <span class="nav-icon">⚡</span> Auto Apply
-        </a>
-        <a class="nav-item" href="#">
+        <a class="nav-item" href="interview.html">
             <span class="nav-icon">🎯</span> Interview AI
         </a>
-        <a class="nav-item" href="#">
+        <a class="nav-item" href="coding.html">
             <span class="nav-icon">💻</span> Coding AI
         </a>
-        <a class="nav-item" href="#">
+        <a class="nav-item" href="cover-letter.html">
+            <span class="nav-icon">✍️</span> Cover Letter
+        </a>
+        <a class="nav-item" href="resume.html">
             <span class="nav-icon">📄</span> Resume Builder
         </a>
         <a class="nav-item" href="#">
-            <span class="nav-icon">✍️</span> Cover Letter
+            <span class="nav-icon">⚡</span> Auto Apply
         </a>
         <a class="nav-item" href="#">
             <span class="nav-icon">🎤</span> Mock Interview
@@ -106,14 +97,12 @@
         </div>
     </div>
 
-    <!-- MAIN CONTENT -->
     <div class="main">
         <div class="page-header">
             <h1>Welcome back, <span id="welcomeName">there</span>! 👋</h1>
             <p>Here's what's happening with your job search today.</p>
         </div>
 
-        <!-- UPGRADE BANNER -->
         <div class="upgrade-banner">
             <div>
                 <h3>🔥 Upgrade to Pro — 50% Off!</h3>
@@ -122,7 +111,6 @@
             <button class="upgrade-btn">Upgrade Now →</button>
         </div>
 
-        <!-- STATS -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-icon">📨</div>
@@ -146,24 +134,13 @@
             </div>
         </div>
 
-        <!-- FEATURES -->
         <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3>Auto Job Apply</h3>
-                <p>Apply to thousands of matching jobs automatically on LinkedIn and Indeed.</p>
-                <span class="coming-soon">Coming Soon</span>
-                <br>
-                <button class="feature-btn">Get Early Access</button>
-            </div>
-
-            <div class="feature-card">
+            <div class="feature-card live">
                 <div class="feature-icon">🎯</div>
-                <h3><button class="feature-btn" onclick="window.location.href='interview.html'">Launch Now 🚀</button></h3>
-                <p>Get instant AI answers during live interviews. Invisible to screen share.</p>
-                <span class="coming-soon">Coming Soon</span>
-                <br>
-                <button class="feature-btn">Get Early Access</button>
+                <h3>Real-Time Interview AI</h3>
+                <p>Get instant AI answers during live interviews. Speech to text + Claude AI.</p>
+                <span class="live-badge">🟢 LIVE</span>
+                <button class="feature-btn" onclick="window.location.href='interview.html'">Launch Now 🚀</button>
             </div>
 
             <div class="feature-card">
@@ -171,17 +148,7 @@
                 <h3>Coding Interview AI</h3>
                 <p>Screen capture + instant solutions for LeetCode and HackerRank problems.</p>
                 <span class="coming-soon">Coming Soon</span>
-                <br>
-                <button class="feature-btn">Get Early Access</button>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">📄</div>
-                <h3>AI Resume Builder</h3>
-                <p>Automatically tailor your resume for every job application.</p>
-                <span class="coming-soon">Coming Soon</span>
-                <br>
-                <button class="feature-btn">Get Early Access</button>
+                <button class="feature-btn disabled">Coming Soon</button>
             </div>
 
             <div class="feature-card">
@@ -189,8 +156,23 @@
                 <h3>Cover Letter Generator</h3>
                 <p>Generate personalized cover letters in seconds for any job.</p>
                 <span class="coming-soon">Coming Soon</span>
-                <br>
-                <button class="feature-btn">Get Early Access</button>
+                <button class="feature-btn disabled">Coming Soon</button>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📄</div>
+                <h3>AI Resume Builder</h3>
+                <p>Automatically tailor your resume for every job application.</p>
+                <span class="coming-soon">Coming Soon</span>
+                <button class="feature-btn disabled">Coming Soon</button>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Auto Job Apply</h3>
+                <p>Apply to thousands of matching jobs automatically on LinkedIn and Indeed.</p>
+                <span class="coming-soon">Coming Soon</span>
+                <button class="feature-btn disabled">Coming Soon</button>
             </div>
 
             <div class="feature-card">
@@ -198,22 +180,20 @@
                 <h3>Mock Interview Practice</h3>
                 <p>Practice with AI before real interviews and get instant feedback.</p>
                 <span class="coming-soon">Coming Soon</span>
-                <br>
-                <button class="feature-btn">Get Early Access</button>
+                <button class="feature-btn disabled">Coming Soon</button>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const supabase = window.supabase.createClient(
-            'https://dyfmqxxkouxtbjdotkfl.supabase.co',
-            'sb_publishable_1ShN1szvqueVwxdvni7vAw_gg11xgWl'
-        )
+        const SUPABASE_URL = 'https://dyfmqxxkouxtbjdotkfl.supabase.co'
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5Zm1xeHhrb3V4dGJqZG90a2ZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0Mjc2MjEsImV4cCI6MjA5NDAwMzYyMX0.fOegPPpTyEWdJOoZ1mOiZtTUt5Nje3sp7Y7siwbLaOs'
 
-        // Check auth and load user data
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+
         async function loadUser() {
-            const { data: { session } } = await supabase.auth.getSession()
+            const { data: { session } } = await supabaseClient.auth.getSession()
 
             if (!session) {
                 window.location.href = 'login.html'
@@ -228,8 +208,7 @@
             document.getElementById('userName').textContent = name
             document.getElementById('userAvatar').textContent = initial
 
-            // Get plan from profiles
-            const { data: profile } = await supabase
+            const { data: profile } = await supabaseClient
                 .from('profiles')
                 .select('plan')
                 .eq('id', user.id)
@@ -243,7 +222,7 @@
         }
 
         async function handleLogout() {
-            await supabase.auth.signOut()
+            await supabaseClient.auth.signOut()
             window.location.href = 'index.html'
         }
 
